@@ -1,3 +1,6 @@
+## Custom
+# Emacs lisp files
+*.el
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof

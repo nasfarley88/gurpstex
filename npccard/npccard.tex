@@ -1,0 +1,144 @@
+\documentclass[draft]{article}
+\usepackage{adjustbox}
+\usepackage{luacode}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{nopageno}
+\usepackage{xparse}
+\usepackage[utf8]{inputenc}
+% \usepackage{cmbright}
+
+\usepackage[
+margin=1.2cm,
+% paperwidth=5in,
+% paperheight=3in
+]{geometry}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{calc}
+\setlength\multicolsep{-\multicolsep}
+
+% started from http://tex.stackexchange.com/questions/7032/good-way-to-make-textcircled-numbers
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes}
+\newcommand{\shapearound}[3]{\tikz[baseline=(char.base)]{
+    \draw[draw=none, use as bounding box] (-1.7ex,-1.7ex) rectangle (1.7ex, 1.7ex);
+    \node[#1,draw,#2,text=black,inner sep=2.7pt, anchor=center] (charmander) {};
+    \node[anchor=center] (char) {#3};
+  }}
+\newcommand\pass[1]{\shapearound{circle}{black}{#1}}
+\newcommand\critpass[1]{\shapearound{starburst, starburst point height=2pt 
+    % ,text width=0.7ex, align=center
+  }{black}{#1}}
+\newcommand\fail[1]{\shapearound{}{white}{#1}}
+% \newcommand\critfail[1]{\shapearound{single arrow, shape border rotate=270,
+%     single arrow head extend=3pt}{black}{#1}} 
+\newcommand\critfail[1]{\shapearound{regular polygon, regular polygon sides=8}{fill=red!20}{#1}} 
+
+\luadirect{require("npccard.lua")}
+
+\NewDocumentCommand{\statstack}{oooooooo}{%
+  \begin{tabularx}{\linewidth}{@{}r@{}X@{}r@{}X@{}}
+    % TODO make these fill up if arguments are given
+    ST&\dotfill & HP&\dotfill \\
+    DX&\dotfill & Will&\dotfill \\
+    IQ&\dotfill & Per&\dotfill \\
+    HT&\dotfill & FP&\dotfill \\
+  \end{tabularx}
+}
+
+\newcommand{\nulldotfill}{\null\dotfill\\}
+
+\newcommand{\nameaccentnotes}{Name:\dotfill \\
+      Accent: \dotfill\\
+      Notes: \dotfill\\
+      \null\dotfill\\
+      \null\dotfill\\
+      \null\dotfill\\
+      \null\dotfill\\
+      \null\dotfill\\
+      \null\dotfill\\
+}
+
+\newlength{\dicerollside}
+\newlength{\dicetablecolwidth}
+\newlength{\dicetablecolsep}
+
+\newcommand{\npccard}[3]{
+  % \fbox{
+  % Uncomment if onecolumn
+  % \begin{minipage}[b][3in][t]{0.5\linewidth}
+  % Uncomment if twocolumn
+  \begin{minipage}[b][3in][t]{0.95\linewidth}
+    \begin{minipage}[b][2.5in][c]{0.27\linewidth}
+      \textbf{Stats}\\[1ex]
+      \statstack{}
+      Dodge: #2 \\
+      Attack to hit: #1\\
+      Attack dmg: \dotfill \vfill
+      \nameaccentnotes{}
+    \end{minipage}
+    \begin{minipage}[b][2.5in][t]{0.58\linewidth}
+      \textbf{Dice rolls}\\[-1ex]
+      \vspace*{-3ex}
+      \begin{center}
+      \tiny
+        % Set length of table columns/sep for the current font
+        \setlength{\dicetablecolwidth}{%
+          \widthof{\luadirect{for i=1,7 do print_pass() end}}}
+        \setlength{\dicetablecolsep}{%
+          \widthof{\luadirect{for i=1,3 do print_pass()
+              end}}-\widthof{\pass{10}}-\widthof{\pass{10}}}
+        \begin{tabular}{ @{}%
+          >{\raggedright\arraybackslash}p{\dicetablecolwidth}%
+          @{\hspace{\dicetablecolsep}}%
+          >{\raggedright\arraybackslash}p{\dicetablecolwidth}%
+          @{}}%
+          \textbf{Attack (#1)} & \textbf{Dodge (#2)} \\
+          \luadirect{for i=1,70 do printdiceroll(#1) end}
+          &%
+          \luadirect{for i=1,70 do printdiceroll(#3) end}\\[\dicetablecolsep]
+          \multicolumn{2}{@{}>{\raggedright\arraybackslash}p{2\dicetablecolwidth+\dicetablecolsep}@{}}{%
+          \textbf{3d6}
+          }\\
+          \multicolumn{2}{@{}>{\raggedright\arraybackslash}p{2\dicetablecolwidth+\dicetablecolsep}@{}}{%
+          \luadirect{for i=1,105 do plainprintdiceroll() end} 
+          }
+        \end{tabular}%
+      \end{center}
+    \end{minipage}
+    \begin{minipage}[b][2.5in][t]{0.45in}
+      \begin{center}
+        \textbf{HP}\\[1ex]
+        \footnotesize
+        \luadirect{hpstack(#3)}
+      \end{center}
+    \end{minipage}\\[-2ex]
+    \begin{center}
+      \vspace*{-2ex}
+      \begin{minipage}[b]{0.95\linewidth}
+        \centering
+        \textit{\luadirect{print_random_quote()}}
+      \end{minipage}
+    \end{center}
+  \end{minipage}
+% }                               % ends fbox
+}
+
+\begin{document}
+\footnotesize
+\noindent
+\begin{multicols}{2}
+  \noindent
+  % \npccard{attack to hit}{dodge}{max hp}
+  \npccard{11}{7}{15}\\[\fill]
+  \npccard{11}{7}{15}\\[\fill]
+  \npccard{11}{7}{15}\\[\fill]
+  \npccard{11}{7}{15}\\[\fill]
+  \npccard{11}{7}{15}\\[\fill]
+  \npccard{11}{7}{15}
+\end{multicols}
+
+\end{document}
