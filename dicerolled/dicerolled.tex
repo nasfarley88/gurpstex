@@ -1,0 +1,25 @@
+\documentclass[a4paper]{article}
+\usepackage{luacode}
+\usepackage{epsdice}
+\usepackage[margin=1cm]{geometry}
+\usepackage{multicol}
+\usepackage{nopageno}
+
+\directlua{require("dicerolled.lua")}
+
+% \newcommand{\rollagainst}{12}
+
+\begin{document}
+% \title{Roll against \rollagainst}
+\title{Pre-rolled 3d6}
+\maketitle
+\begin{multicols}{5}
+\Large\noindent\centering
+  \begin{luacode}
+    for i=1,150 do
+    d = diceroll()
+    printdiceroll(d)
+    end
+  \end{luacode}
+\end{multicols}
+\end{document}
