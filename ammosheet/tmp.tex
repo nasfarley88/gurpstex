@@ -1,0 +1,17 @@
+\documentclass{article}
+
+% This is TeX
+\newdimen\boxwidth
+\boxwidth=3.4ex
+% end of TeX
+
+\newlength{\boxwidthlatex}
+\setlength{\boxwidthlatex}{5.8ex}
+
+\begin{document}
+\directlua{tex.print(tex.dimen['boxwidth'])}  
+
+% How to do something like this?
+\directlua{tex.print(tex.sp('3.4ex'))}  
+
+\end{document}
