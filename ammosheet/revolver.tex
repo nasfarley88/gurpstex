@@ -9,66 +9,30 @@
 \usetikzlibrary{positioning}
 \usetikzlibrary{arrows.meta}
 
-% \newcommand\Xfill[1]{\leavevmode\xleaders\hbox{ #1 }\hfill\kern0pt}
 \newcommand\Xfill[1]{\leavevmode\xleaders\hbox{\hspace{3pt}#1\hspace{3pt}}\hfill\kern0pt}
-% \newcommand\six{\Xfill{6}}
-% \newcommand\five{\Xfill{5}}
-% \newcommand\four{\Xfill{4}}
-% \newcommand\three{\Xfill{3}}
-% \newcommand\two{\Xfill{2}}
-% \newcommand\one{\Xfill{1}}
-% \newcommand\R{\Xfill{R}}
-% \newcommand\nameline{\Xfill{\rule{5em}{0.4pt}}}
+\newcommand\nameetc{\raisebox{-\baselineskip}{
+\begin{minipage}[t]{0.15\linewidth}
+  Name: \dotfill\\[1ex]
+  Signature Move:\dotfill\\[1ex]
+  \null\dotfill\\[1ex]
+  Damage:\dotfill
+\end{minipage}}}
 
 \newlength\boxwidth
 \setlength{\boxwidth}{3.4ex}
+\newcounter{randomseed}
+\setcounter{randomseed}{\luadirect{tex.sprint(os.time())}}
 
 \luadirect{require("ammosheet.lua")}
 
 % TODO make starred and not starred for load individually and load mag
-% \newcommand\ammoboxes[1]{\luadirect{column_of_bullets(#1) column_of_reloads(#1)}}
 \newcommand\ammoboxes[1]{\luadirect{column_of_bullets(#1, #1)}}
+\newcommand\loadedammoboxes[1]{\luadirect{column_of_bullets(#1, #1, true)}}
 \newcommand\ammoboxessinglereload[1]{\luadirect{column_of_bullets(#1, 1)}}
-% \newcommand\ammoboxessinglereload[1]{\luadirect{column_of_bullets(#1) single_reload(#1)}}
-% \newcommand\ammoboxes[1]{\luadirect{column_of_bullets(#1) single_reload(#1)}}
+\newcommand\loadedammoboxessinglereload[1]{\luadirect{column_of_bullets(#1, 1, true)}}
 
 \begin{document}
-% \raggedright
-% \ttfamily{}
-% \blindtext[8]
-% \dotfill{} \luadirect{for i=1,7 do tex.print(print_box(i)) end}
-% \begin{tabular}{|c|c|c|c|c|c|c|}\hline 6 & 5 & 4 & 3 & 2 & 1 & R \\\hline\end{tabular}
-
-% \tikz{
-%   \draw[draw, use as bounding box] (-1.7ex,-1.7ex) rectangle (1.7ex, 1.7ex);
-%   \node[anchor=center] (char) {3};
-%   }\hspace{-0.4pt}%
-% \tikz{
-%   \draw[draw, use as bounding box] (-1.7ex,-1.7ex) rectangle (1.7ex, 1.7ex);
-%   \node[anchor=center] (char) {3};
-%   }
 \noindent
-% TODO consider putting the reloads before the ammo and then crossing out the
-% first one. This will allow it to be more obvious what to do. Also, it will
-% allow reloads to be associated with particular slots as in a revolver
-%
-% TODO make a 'slashed' version of it for a tutorial
-%
-% TODO show a 'do you feel lucky punk' tutorial where a random bullet is loaded
-% (by crossing out the R next to the chosen slot) and then roll a d6 to see
-% which bullet fires
-\begin{tikzpicture}[baseline=\baselineskip]
-  \node (a) at (0,0) {\parbox{30ex}{Name \dotfill}};
-  \node (b) [below of=a] {\parbox{30ex}{Signature move \dotfill}};
-  \node (c) [below=2ex of b] {\parbox{30ex}{\dotfill}};
-  \node (d) [below of=c] {\parbox{30ex}{Damage \dotfill}};
-\end{tikzpicture}%
-\Xfill{\ammoboxes{6}}\\[1ex]
-\begin{tikzpicture}[baseline=\baselineskip]
-  \node (a) at (0,0) {\parbox{30ex}{Name \dotfill}};
-  \node (b) [below of=a] {\parbox{30ex}{Signature move \dotfill}};
-  \node (c) [below=2ex of b] {\parbox{30ex}{\dotfill}};
-  \node (d) [below of=c] {\parbox{30ex}{Damage \dotfill}};
-\end{tikzpicture}%
-\Xfill{\ammoboxessinglereload{15}}
+\nameetc\loadedammoboxes{6} \Xfill{\ammoboxes{6}}\\[1ex]
+\nameetc\loadedammoboxessinglereload{15} \Xfill{\ammoboxessinglereload{15}}
 \end{document}
